@@ -69,6 +69,16 @@ Si reemplazás el video, dejá el nuevo en `public/video/` y corré ese comando 
 El video va siempre en silencio (el audio original es inaudible, −52 dB). Eso además
 garantiza que los navegadores nunca bloqueen la reproducción.
 
+## La música
+
+`public/deep-in-it.mp3` arranca cuando el invitado toca el sobre, desde el segundo que
+indica `CONFIG.musicaDesde` (46: antes de ahí la canción es intro instrumental). Sigue
+sonando durante toda la invitación y vuelve a ese mismo segundo al terminar, no al 0.
+
+El `play()` va dentro del handler del toque a propósito: iOS solo permite arrancar audio
+dentro del gesto que lo pidió, y el destello ocurre medio minuto después. Hay un botón de
+silencio abajo a la izquierda.
+
 ---
 
 ## Panel de invitados

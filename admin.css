@@ -83,7 +83,7 @@ body.admin {
 }
 
 .note {
-  background: rgba(217, 182, 74, 0.08);
+  background: rgba(211, 180, 124, 0.08);
   border: 1px solid var(--gold-soft);
   border-radius: 0.5rem;
   padding: 0.8rem 1rem;
@@ -144,7 +144,7 @@ body.admin {
 .filter.active {
   color: var(--gold);
   border-color: var(--gold);
-  background: rgba(217, 182, 74, 0.12);
+  background: rgba(211, 180, 124, 0.12);
 }
 
 .stats {
@@ -195,7 +195,7 @@ th, td {
   padding: 0.8rem 0.9rem;
   text-align: left;
   white-space: nowrap;
-  border-bottom: 1px solid rgba(127, 168, 220, 0.16);
+  border-bottom: 1px solid rgba(154, 184, 216, 0.18);
 }
 
 th {
@@ -252,9 +252,9 @@ td.unknown { color: var(--muted); font-style: italic; }
 .notes  { width: 12rem; }
 
 .stats .highlight {
-  background: rgba(217, 182, 74, 0.14);
+  background: rgba(211, 180, 124, 0.14);
   border-color: var(--gold);
 }
 
 .yes { color: #7fc98a; }
-.no  { color: #8f6a68; }
+.no  { color: #64788f; }

@@ -9,6 +9,10 @@ const CONFIG = {
   // código→nombre vive en el panel y nunca se publica acá.
   showGuestName: false,
 
+  // La canción entra recién en el segundo 46: la intro instrumental no acompaña
+  // al video. Al terminar vuelve acá, no al principio.
+  musicaDesde: 46,
+
   whatsapp: '17867163274',
   // Coordenadas exactas del lugar. Van así y no como link corto de Maps
   // porque los goo.gl caducan y estos links se mandan con meses de anticipación.
@@ -111,6 +115,8 @@ const flash = document.getElementById('flash');
 const skipBtn = document.getElementById('skipBtn');
 const replayBtn = document.getElementById('replayBtn');
 const scrollHint = document.getElementById('scrollHint');
+const musica = document.getElementById('musicaEl');
+const muteBtn = document.getElementById('muteBtn');
 
 const { evento } = CONFIG;
 
@@ -263,10 +269,23 @@ function reveal(fast = false) {
   if (fast) tl.timeScale(1.8);
 }
 
+// Buscar antes de que el navegador sepa la duración deja currentTime en 0.
+function irAlInicioMusical() {
+  if (musica.readyState >= 1) musica.currentTime = CONFIG.musicaDesde;
+  else musica.addEventListener('loadedmetadata', irAlInicioMusical, { once: true });
+}
+
 function startFilm() {
   track('open');
   document.getElementById('introHint').hidden = true;
   skipBtn.hidden = false;
+
+  // Va acá y no en showContent() porque iOS solo deja arrancar audio dentro del
+  // gesto que lo pidió, y el destello ocurre medio minuto después del toque.
+  irAlInicioMusical();
+  const m = musica.play();
+  if (m && m.catch) m.catch(() => { muteBtn.hidden = true; });
+  muteBtn.hidden = false;
 
   const p = film.play();
   if (p && p.catch) {
@@ -302,6 +321,17 @@ if (reducedMotion) {
     reveal(true);
   });
 }
+
+musica.addEventListener('ended', () => {
+  irAlInicioMusical();
+  musica.play().catch(() => {});
+});
+
+muteBtn.addEventListener('click', () => {
+  musica.muted = !musica.muted;
+  muteBtn.textContent = musica.muted ? '🔇' : '🔊';
+  muteBtn.setAttribute('aria-label', musica.muted ? 'Activar música' : 'Silenciar música');
+});
 
 replayBtn.addEventListener('click', () => {
   revealed = false;

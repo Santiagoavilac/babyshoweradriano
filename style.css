@@ -1,15 +1,17 @@
 :root {
-  --gold: #d9b64a;
-  --gold-soft: rgba(217, 182, 74, 0.3);
-  --bg: #4a0d14;
-  --card: #5c1119;
-  --text: #f7efe3;
-  --muted: #d1a89e;
+  /* Ralph Lauren: navy de base, beige camel para el texto de acento,
+     azul Oxford claro para los detalles finos. */
+  --gold: #d3b47c;
+  --gold-soft: rgba(211, 180, 124, 0.32);
+  --bg: #12263f;
+  --card: #1a3352;
+  --text: #f2ece1;
+  --muted: #b3c2d4;
 
-  /* El azul de los detalles va aclarado: un azul noche sobre vino oscuro son
-     dos colores oscuros y los bordes y puntos desaparecen. */
-  --blue: #7fa8dc;
-  --blue-soft: rgba(127, 168, 220, 0.32);
+  /* Sobre navy, un azul oscuro desaparece: los bordes y puntos van en
+     Oxford claro para que se lean. */
+  --blue: #9ab8d8;
+  --blue-soft: rgba(154, 184, 216, 0.34);
 }
 
 * { box-sizing: border-box; }
@@ -120,10 +122,10 @@ video::-webkit-media-controls-overlay-play-button {
   pointer-events: none;
   background:
     radial-gradient(circle at 50% 50%,
-      #fffaf0 0%,
-      #f6e6b4 22%,
+      #fffdf8 0%,
+      #f2e4c9 22%,
       var(--gold) 45%,
-      rgba(212, 175, 55, 0.35) 68%,
+      rgba(211, 180, 124, 0.35) 68%,
       rgba(0, 0, 0, 0) 100%);
 }
 
@@ -150,7 +152,7 @@ video::-webkit-media-controls-overlay-play-button {
 }
 
 .section + .section {
-  border-top: 1px solid rgba(127, 168, 220, 0.18);
+  border-top: 1px solid rgba(154, 184, 216, 0.2);
 }
 
 .hero {
@@ -389,7 +391,7 @@ video::-webkit-media-controls-overlay-play-button {
   height: 7px;
   border-radius: 50%;
   background: var(--blue);
-  box-shadow: 0 0 0 4px rgba(127, 168, 220, 0.16);
+  box-shadow: 0 0 0 4px rgba(154, 184, 216, 0.18);
 }
 
 .tl-hora {
@@ -447,8 +449,8 @@ video::-webkit-media-controls-overlay-play-button {
   font-size: 1.05rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #1a1405;
-  background: linear-gradient(135deg, #e8c968, var(--gold) 55%, #b8912a);
+  color: #12263f;
+  background: linear-gradient(135deg, #e6d2ab, var(--gold) 55%, #b49360);
   border: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
@@ -479,7 +481,7 @@ video::-webkit-media-controls-overlay-play-button {
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   color: var(--gold);
-  background: rgba(74, 13, 20, 0.85);
+  background: rgba(18, 38, 63, 0.86);
   border: 1px solid var(--blue-soft);
   border-radius: 999px;
   backdrop-filter: blur(8px);
@@ -492,4 +494,12 @@ video::-webkit-media-controls-overlay-play-button {
   .btn { transition: none; }
   .scroll-line { animation: none; transform: scaleY(1); opacity: 0.6; }
   .section { transition: none; }
+}
+
+.replay.mute {
+  right: auto;
+  left: 1rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 1rem;
+  line-height: 1;
 }

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Baby Shower — Adriano</title>
 <meta name="description" content="Una pequeña gran celebración. Sábado 5 de Septiembre 2026, 4:00 PM — Colinas del Urubo Club House.">
-<meta name="theme-color" content="#4a0d14">
+<meta name="theme-color" content="#12263f">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Baby Shower Adriano">
@@ -50,6 +50,8 @@
 
   <button id="skipBtn" type="button" hidden>Saltar ›</button>
 </div>
+
+<audio id="musicaEl" src="/public/deep-in-it.mp3" preload="auto"></audio>
 
 <div id="flash" aria-hidden="true"></div>
 
@@ -128,6 +130,7 @@
 
 </main>
 
+<button id="muteBtn" class="replay mute" type="button" aria-label="Silenciar música" hidden>🔊</button>
 <button id="replayBtn" class="replay" type="button" hidden>📩 Ver de nuevo</button>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
