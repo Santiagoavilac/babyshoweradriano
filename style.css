@@ -485,71 +485,113 @@ video::-webkit-media-controls-overlay-play-button {
   color: var(--muted);
 }
 
-/* ---------- Timeline del evento ---------- */
+/* ---------- Tarjeta del programa ---------- */
 
-.timeline {
+/* Una tarjeta de papel crema apoyada sobre el navy. Es el mismo recurso que usa
+   una invitación impresa cuando mete una tarjeta aparte con el orden del día:
+   cambia el material, no solo el tamaño de letra. */
+.tarjeta {
+  display: block;
+  max-width: 20rem;
+  margin: 0 auto;
+  padding: 2.6rem 1.6rem 2.9rem;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(160, 140, 105, 0.05) 0 1px,
+      transparent 1px 7px),
+    linear-gradient(175deg, #fdfbf5 0%, #f6f1e4 100%);
+  color: #2c3d4f;
+  border-radius: 2px;
+
+  /* La sombra la proyecta la tarjeta sobre el fondo, no un contenedor sobre la
+     tarjeta: por eso es larga y suave, como papel sobre una mesa. */
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 18px 40px -18px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Filete impreso por dentro del borde: el papel sigue hasta el corte, la línea
+   se detiene antes. Invertirlo es lo que delata una tarjeta hecha en pantalla. */
+.tarjeta::before {
+  content: '';
+  position: absolute;
+  inset: 0.55rem;
+  border: 1px solid rgba(122, 105, 77, 0.35);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+.tarjeta-sello {
+  display: block;
+  width: auto;
+  height: 3.4rem;
+  margin: 0 auto 1.4rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.28));
+}
+
+.tarjeta-titulo {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  text-transform: uppercase;
+  color: #6b5b42;
+}
+
+/* Filete doble corto y centrado, la marca de agua de la papelería grabada. */
+.tarjeta-filete {
+  width: 3.5rem;
+  height: 3px;
+  margin: 1rem auto 1.8rem;
+  border-top: 1px solid rgba(122, 105, 77, 0.5);
+  border-bottom: 1px solid rgba(122, 105, 77, 0.28);
+}
+
+.programa-lista {
   list-style: none;
   margin: 0;
-  padding: 0 0 0 1.7rem;
-  text-align: left;
-  position: relative;
+  padding: 0;
+  text-align: center;
 }
 
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 0.22rem;
-  top: 0.55rem;
-  bottom: 0.55rem;
-  width: 1px;
-  background: var(--rule-faint);
-}
-
-.timeline li {
-  position: relative;
-  padding: 0 0 2.1rem 0.4rem;
-}
-
-.timeline li:last-child { padding-bottom: 0; }
-
-/* Círculo hueco, no punto lleno: el relleno se lee como bullet de app. */
-.timeline li::before {
-  content: '';
-  position: absolute;
-  left: -1.63rem;
-  top: 0.5rem;
-  width: 7px;
-  height: 7px;
-  border: 1px solid var(--gold);
-  border-radius: 50%;
-  background: var(--bg);
+.programa-lista li + li {
+  margin-top: 1.6rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid rgba(122, 105, 77, 0.18);
 }
 
 .tl-hora {
   display: block;
-  font-size: 0.58rem;
-  font-weight: 300;
-  letter-spacing: 0.3em;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.4rem;
+  color: #8a7657;
+  margin-bottom: 0.5rem;
 }
 
 .tl-titulo {
   display: block;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 400;
-  color: var(--ivory);
+  line-height: 1.15;
+  color: #22334a;
 }
 
 .tl-detalle {
   display: block;
-  margin-top: 0.2rem;
+  margin-top: 0.25rem;
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.05rem;
   font-style: italic;
-  color: var(--muted);
+  color: #6f7d8c;
 }
 
 /* ---------- Botones ---------- */
@@ -614,12 +656,25 @@ video::-webkit-media-controls-overlay-play-button {
   color: var(--muted);
 }
 
-.footer-mark {
-  font-family: 'Pinyon Script', cursive;
-  font-size: 3rem;
-  color: var(--gold);
-  opacity: 0.32;
-  margin: 4rem 0 0;
+/* El sello de lacre cierra la invitación, que es literalmente su función en una
+   carta: lo último que se ve, no un adorno más. */
+.footer-sello {
+  display: block;
+  width: auto;
+  height: 4.2rem;
+  margin: 4rem auto 0;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));
+}
+
+/* El sobre abierto: la pieza impresa que el invitado no va a recibir por correo.
+   Va suelto sobre el fondo, sin marco ni caja, para que se lea como una foto
+   del sobre y no como una imagen incrustada en una web. */
+.sobre {
+  display: block;
+  width: min(100%, 17rem);
+  height: auto;
+  margin: 0 auto 2.4rem;
+  filter: drop-shadow(0 20px 34px rgba(0, 0, 0, 0.5));
 }
 
 .replay {
