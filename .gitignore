@@ -8,3 +8,8 @@ invitados.json
 .playwright-cli/
 output/
 .env*
+
+# Docs que instala sola la integración de Upstash, no son del proyecto
+.agents/
+.claude/
+skills-lock.json
