@@ -37,12 +37,13 @@
 
   <input id="importFile" type="file" accept="application/json,.json" hidden>
 
-  <p class="note warn">
-    <strong>Respaldá seguido.</strong> No hay base de datos: la lista y los estados viven en
-    este navegador. Si limpiás el caché, se pierden. Usá <em>Exportar JSON</em>.
+  <p id="avisoRespaldo" class="note warn" hidden>
+    <strong>Respaldá seguido.</strong> Sin conexión con el servidor, la lista y los estados
+    viven solo en este navegador. Si limpiás el caché, se pierden. Usá <em>Exportar JSON</em>.
   </p>
 
   <p id="storageNote" class="note" hidden></p>
+  <p id="syncNote" class="note warn" hidden></p>
 
   <form id="addForm" class="add-form">
     <input id="addName" type="text" placeholder="Nombre del invitado" required>

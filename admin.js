@@ -16,10 +16,13 @@ const dashboard = document.getElementById('dashboard');
 const loginError = document.getElementById('loginError');
 const tableBody = document.getElementById('tableBody');
 const storageNote = document.getElementById('storageNote');
+const syncNote = document.getElementById('syncNote');
+const avisoRespaldo = document.getElementById('avisoRespaldo');
 const emptyState = document.getElementById('emptyState');
 const importFile = document.getElementById('importFile');
 
 let auth = null;
+let enServidor = false;
 let guests = {};   // { id: { name, status, people, notes } }
 let events = {};   // { id: { views, opened, rsvp, lastEvent, lastAt } }
 let filtro = 'todos';
@@ -34,8 +37,42 @@ function leerJSON(key) {
   }
 }
 
+// localStorage queda como espejo local: si el servidor no responde, el panel
+// sigue usable y no se pierde lo que estabas cargando.
 function guardarGuests() {
   localStorage.setItem(GUESTS_KEY, JSON.stringify(guests));
+}
+
+function apiGuests(method, body) {
+  return fetch('/api/guests', {
+    method,
+    headers: { Authorization: auth, 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+}
+
+async function sincronizar(promesa) {
+  if (!enServidor) return;
+  try {
+    const res = await promesa;
+    if (!res.ok) throw new Error(res.status);
+    syncNote.hidden = true;
+  } catch {
+    syncNote.hidden = false;
+    syncNote.textContent =
+      'No se pudo guardar en el servidor. El cambio quedó en este navegador; ' +
+      'refrescá para reintentar.';
+  }
+}
+
+function guardarUno(id) {
+  guardarGuests();
+  sincronizar(apiGuests('POST', { id, guest: guests[id] }));
+}
+
+function guardarTodos() {
+  guardarGuests();
+  sincronizar(apiGuests('PUT', { guests }));
 }
 
 function nuevoCodigo() {
@@ -52,23 +89,37 @@ function nuevoCodigo() {
 async function cargar() {
   guests = leerJSON(GUESTS_KEY);
   events = leerJSON(EVENTS_KEY);
+  syncNote.hidden = true;
 
-  // Si algún día se configura KV, el tracking automático viene del servidor.
+  const pedir = (ruta) => fetch(ruta, { headers: { Authorization: auth } });
+
   try {
-    const res = await fetch('/api/events', { headers: { Authorization: auth } });
-    if (res.ok) {
-      const data = await res.json();
-      events = {};
-      for (const r of data.invitados || []) events[r.slug] = r;
-      storageNote.hidden = true;
+    const [resEventos, resLista] = await Promise.all([pedir('/api/events'), pedir('/api/guests')]);
+    if (!resEventos.ok || !resLista.ok) throw new Error('sin servidor');
+
+    const data = await resEventos.json();
+    events = {};
+    for (const r of data.invitados || []) events[r.slug] = r;
+
+    const lista = (await resLista.json()).guests || {};
+    // La primera vez el servidor está vacío y lo que vale es lo que ya tenías acá.
+    if (!Object.keys(lista).length && Object.keys(guests).length) {
+      await apiGuests('PUT', { guests });
     } else {
-      throw new Error(res.status);
+      guests = lista;
+      guardarGuests();
     }
+
+    enServidor = true;
+    storageNote.hidden = true;
+    avisoRespaldo.hidden = true;
   } catch {
+    enServidor = false;
     storageNote.hidden = false;
     storageNote.textContent =
-      'El tracking automático (aperturas y clicks) sale de localStorage: solo se ven los ' +
-      'eventos generados en este mismo dispositivo.';
+      'Sin conexión con el servidor: el panel está mostrando lo guardado en este navegador. ' +
+      'Refrescá para reintentar.';
+    avisoRespaldo.hidden = false;
   }
 
   render();
@@ -109,7 +160,7 @@ function actualizar(id, campo, valor) {
   guests[id] = { ...actual, [campo]: valor };
   // Elegir el estado a mano lo congela: el tracking ya no lo vuelve a mover.
   if (campo === 'status') guests[id].manual = true;
-  guardarGuests();
+  guardarUno(id);
   render();
 }
 
@@ -250,7 +301,7 @@ document.getElementById('addForm').addEventListener('submit', (e) => {
 
   const id = nuevoCodigo();
   guests[id] = { name: nombre, status: 'sin_confirmar', people: 1, notes: '' };
-  guardarGuests();
+  guardarUno(id);
   input.value = '';
   render();
 
@@ -300,7 +351,7 @@ importFile.addEventListener('change', async () => {
     }
   }
 
-  guardarGuests();
+  guardarTodos();
   importFile.value = '';
   render();
   alert(`Importado: ${nuevos} invitados nuevos, ${actualizados} nombres actualizados.\nLos estados que ya tenías no se tocaron.`);
@@ -353,10 +404,14 @@ document.getElementById('clearBtn').addEventListener('click', async () => {
 
   localStorage.removeItem(GUESTS_KEY);
   localStorage.removeItem(EVENTS_KEY);
+  guests = {};
   try {
-    await fetch('/api/events', { method: 'DELETE', headers: { Authorization: auth } });
+    await Promise.all([
+      fetch('/api/events', { method: 'DELETE', headers: { Authorization: auth } }),
+      fetch('/api/guests', { method: 'DELETE', headers: { Authorization: auth } }),
+    ]);
   } catch {
-    /* sin KV no hay nada que limpiar del lado del servidor */
+    /* sin servidor no hay nada que limpiar del otro lado */
   }
   cargar();
 });

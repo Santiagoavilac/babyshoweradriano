@@ -1,4 +1,5 @@
-export const KEY = 'bsa:guests';
+export const KEY = 'bsa:guests';   // tracking automático, lo escribe la invitación
+export const LISTA = 'bsa:lista';  // lista maestra y estado manual, lo escribe el panel
 
 export const CREDENCIALES = {
   usuario: process.env.ADMIN_USER || 'adriano',

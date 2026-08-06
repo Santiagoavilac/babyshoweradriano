@@ -100,19 +100,24 @@ personas ni notas que ya cargaste.
 Es una barrera de cortesía, no de seguridad. Cualquiera que lea el código encuentra las
 credenciales — no pongas ahí nada que no quieras que se vea.
 
-### Persistencia — leé esto
+### Persistencia
 
-> **No hay base de datos.** La lista de invitados y todo el estado manual viven en el
-> `localStorage` de **ese** navegador. Si limpiás el caché, cambiás de dispositivo o usás
-> modo privado, se pierde todo.
->
-> **Exportá el JSON seguido.** El botón *Exportar JSON* baja todo (nombres, estados,
-> personas, notas) y *Importar JSON* lo restaura.
+Todo vive en Redis (Upstash, vía el Marketplace de Vercel): tanto el tracking como la lista
+maestra y el estado manual. Podés entrar desde el celular o desde otra computadora y ver lo
+mismo, y limpiar el caché no borra nada.
 
-Lo mismo aplica al tracking automático: **sin una base Redis conectada, los eventos se
-guardan en `localStorage`**. Y como el click ocurre en el teléfono del invitado, ese evento
-nunca llega a tu panel: vas a ver todo en cero y el auto-confirmado no se activa nunca. Es
-la diferencia entre marcar los estados a mano y que se marquen solos.
+| Clave | La escribe | Contiene |
+|---|---|---|
+| `bsa:guests` | la invitación, vía `/api/track` | `views`, `opened`, `rsvp`, `lastEvent`, `lastAt` |
+| `bsa:lista` | el panel, vía `/api/guests` | `name`, `status`, `people`, `notes`, `manual` |
+
+`localStorage` quedó como espejo local: si el servidor no responde, el panel sigue usable
+con lo último que viste y aparece un aviso. Ahí sí conviene *Exportar JSON*, que es un
+respaldo completo y `Importar JSON` lo restaura.
+
+**Sin base conectada** el panel funciona igual pero solo con `localStorage`, y ahí pierde
+la mitad de la gracia: como el click ocurre en el teléfono del invitado, ese evento nunca
+llega a tu navegador. Verías todo en cero y el auto-confirmado no se activaría nunca.
 
 Para activarlo:
 
@@ -164,9 +169,10 @@ index.html              invitación
 admin.html / admin.js   panel
 script.js               CONFIG, intro, destello GSAP, scroll reveal, countdown, tracking
 style.css / admin.css
-api/track.js            POST — registra eventos
-api/events.js           GET/DELETE — lectura y limpieza (Basic Auth)
-api/_kv.js              cliente KV + auth compartidos
+api/track.js            POST — registra eventos de la invitación
+api/events.js           GET/DELETE — tracking automático (Basic Auth)
+api/guests.js           GET/POST/PUT/DELETE — lista maestra y estado (Basic Auth)
+api/_kv.js              cliente Redis + auth compartidos
 scripts/build-assets.sh generación de video/imágenes con ffmpeg
 scripts/generate-links.mjs
 public/                 video, poster, og:image, favicon
