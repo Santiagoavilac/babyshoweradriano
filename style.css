@@ -30,6 +30,10 @@ html, body {
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
+
+  /* Los osos se sangran fuera del margen a propósito; sin esto el navegador
+     los toma como contenido y deja arrastrar la página de costado. */
+  overflow-x: hidden;
 }
 
 body {
@@ -168,6 +172,7 @@ video::-webkit-media-controls-overlay-play-button {
 }
 
 .section {
+  position: relative;
   text-align: center;
   padding: clamp(4rem, 15vw, 6.5rem) 0;
   opacity: 0;
@@ -179,6 +184,66 @@ video::-webkit-media-controls-overlay-play-button {
 .section.visible {
   opacity: 1;
   transform: none;
+}
+
+/* Los osos Polo son decoración, no contenido: van detrás del texto, sangrados
+   por el borde de la pantalla, y nunca deben empujar el layout ni capturar un
+   toque. El z-index negativo funciona porque .section crea contexto de apilado
+   (tiene transform) y no tiene fondo propio: quedan sobre el papel, bajo la
+   tipografía. */
+.oso {
+  position: absolute;
+  z-index: -1;
+
+  /* Van montados sobre el filete que separa las secciones: es la única banda
+     de ancho completo que está garantizadamente vacía. Centrarlos ahí (la
+     mitad en el padding de arriba, la mitad en el de abajo) es lo que evita
+     que se apoyen sobre un párrafo cuando el texto cambia de largo. */
+  top: 0;
+  translate: 0 -50%;
+
+  width: auto;
+  height: clamp(4.75rem, 19vw, 6.5rem);
+  opacity: 0.8;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Cortados por el borde: un motivo sangrado se lee como estampado de papelería;
+   uno entero y centrado se lee como sticker. */
+.oso-izq {
+  left: -1.5rem;
+  rotate: -4deg;
+}
+
+.oso-der {
+  right: -1.5rem;
+  rotate: 4deg;
+}
+
+.oso-grande {
+  height: clamp(6rem, 25vw, 8rem);
+}
+
+/* El hero no tiene filete arriba, así que este va en el hueco entre el contador
+   y el "Desliza", que es donde la pantalla queda vacía. */
+.oso-hero {
+  top: auto;
+  bottom: 14%;
+  right: -1.25rem;
+  translate: 0;
+  rotate: 4deg;
+  height: clamp(5.5rem, 22vw, 7.5rem);
+  opacity: 0.7;
+}
+
+@media (min-width: 40rem) {
+  .oso-hero { right: -4.5rem; }
+}
+
+@media (min-width: 40rem) {
+  .oso-izq { left: -4.5rem; }
+  .oso-der { right: -4.5rem; }
 }
 
 /* Filete doble: una línea sola es una separación, dos son papelería. */
