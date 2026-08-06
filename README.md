@@ -148,6 +148,10 @@ funciones de `/api`.
 `vercel.json` manda todo lo que no sea un archivo real ni `/api/*` a `index.html`, que es
 lo que hace funcionar las rutas tipo `/a7f3k2`.
 
+`outputDirectory: "."` no es decorativo: si falta, Vercel toma `public/` como raíz del sitio
+(es su default cuando esa carpeta existe y no hay framework) y el `index.html` de la raíz
+nunca se sirve — todo el sitio responde 404 menos las funciones de `/api`.
+
 Después de deployar, actualizá `og:url` en `index.html` con tu dominio final para que la
 previsualización de WhatsApp apunte bien.
 
