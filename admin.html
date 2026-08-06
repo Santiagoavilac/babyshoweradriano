@@ -27,19 +27,26 @@
   <header class="admin-head">
     <h1>Invitados</h1>
     <div class="actions">
-      <button id="importBtn" class="btn btn-ghost" type="button">Importar JSON</button>
-      <button id="exportBtn" class="btn btn-ghost" type="button">Exportar JSON</button>
-      <button id="csvBtn" class="btn btn-ghost" type="button">Exportar CSV</button>
-      <button id="refreshBtn" class="btn btn-ghost" type="button">Refrescar</button>
-      <button id="clearBtn" class="btn btn-ghost danger" type="button">Limpiar datos</button>
+      <button id="refreshBtn" class="btn btn-ghost" type="button">Actualizar</button>
+      <button id="csvBtn" class="btn btn-ghost" type="button">Descargar planilla</button>
+      <button id="exportBtn" class="btn btn-ghost" type="button">Guardar copia</button>
+      <button id="importBtn" class="btn btn-ghost" type="button">Restaurar copia</button>
+      <button id="clearBtn" class="btn btn-ghost danger" type="button">Borrar todo</button>
     </div>
   </header>
 
   <input id="importFile" type="file" accept="application/json,.json" hidden>
 
   <p id="avisoRespaldo" class="note warn" hidden>
-    <strong>Respaldá seguido.</strong> Sin conexión con el servidor, la lista y los estados
-    viven solo en este navegador. Si limpiás el caché, se pierden. Usá <em>Exportar JSON</em>.
+    <strong>Ojo:</strong> ahora mismo la lista vive solo en este teléfono o computadora.
+    Tocá <em>Guardar copia</em> cada tanto para no perderla.
+  </p>
+
+  <p class="note">
+    <strong>Cómo se usa.</strong> Escribí el nombre y tocá <em>Agregar</em>. Después,
+    en la fila de esa persona, tocá <em>Enviar</em>: se abre WhatsApp con la invitación
+    lista y elegís a quién mandársela. Cada invitado tiene su propio link, y por eso
+    el panel te va marcando solo quién la abrió y quién confirmó.
   </p>
 
   <p id="storageNote" class="note" hidden></p>
@@ -69,6 +76,7 @@
       <thead>
         <tr>
           <th>Invitado</th>
+          <th>Invitación</th>
           <th>Estado</th>
           <th>Personas</th>
           <th>Notas</th>
@@ -83,7 +91,7 @@
   </div>
 
   <p id="emptyState" class="note" hidden>
-    Todavía no hay invitados. Importá el <code>invitados.json</code> que genera el script de links.
+    Todavía no hay invitados. Escribí un nombre arriba y tocá <em>Agregar</em> para empezar.
   </p>
 </main>
 

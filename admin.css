@@ -258,3 +258,83 @@ td.unknown { color: var(--muted); font-style: italic; }
 
 .yes { color: #7fc98a; }
 .no  { color: #64788f; }
+
+/* ---------- Enviar la invitación ---------- */
+
+.acciones {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.accion {
+  font-family: inherit;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.75rem;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 1px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.accion:hover { background: rgba(195, 168, 120, 0.1); }
+
+/* ---------- Fichas en celular ---------- */
+
+/* Nueve columnas con scroll lateral son inusables en un teléfono, y el panel lo
+   van a manejar los papás desde el celular. Abajo de 52rem cada invitado pasa a
+   ser una ficha apilada con el nombre del campo al lado del dato. */
+@media (max-width: 52rem) {
+  .table-wrap { border: none; overflow-x: visible; }
+
+  table, tbody, tr, td { display: block; width: 100%; }
+
+  thead { display: none; }
+
+  tbody tr {
+    border: 1px solid var(--rule-faint);
+    border-radius: 1px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.9rem;
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0;
+    white-space: normal;
+    border-bottom: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* El nombre encabeza la ficha, así que no necesita etiqueta ni fila propia. */
+  td:first-child {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    color: var(--ivory);
+    padding-bottom: 0.7rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+
+  td:first-child::before { content: none; }
+
+  .acciones { justify-content: flex-end; }
+
+  .people, .notes { width: auto; flex: 1 1 auto; max-width: 60%; }
+}

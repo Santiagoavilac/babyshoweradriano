@@ -24,6 +24,11 @@ requiere tocar ese array.
 
 ## Links personalizados
 
+**Para el uso diario no hace falta nada de esto.** El panel `/admin` crea el invitado, le
+asigna el código y abre WhatsApp con la invitación lista: lo manejan los papás desde el
+celular sin tocar un archivo ni una terminal. El script de abajo sirve para dar de alta
+muchos invitados de una sola vez.
+
 ```bash
 node scripts/generate-links.mjs --base https://tu-sitio.vercel.app "María Gómez" "Juan Pérez"
 node scripts/generate-links.mjs --base https://tu-sitio.vercel.app --file nombres.txt
