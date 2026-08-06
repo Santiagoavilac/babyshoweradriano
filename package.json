@@ -10,6 +10,6 @@
     "links": "node scripts/generate-links.mjs"
   },
   "dependencies": {
-    "@vercel/kv": "^3.0.0"
+    "@upstash/redis": "^1.38.2"
   }
 }

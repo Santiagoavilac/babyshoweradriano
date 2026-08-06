@@ -109,14 +109,25 @@ credenciales — no pongas ahí nada que no quieras que se vea.
 > **Exportá el JSON seguido.** El botón *Exportar JSON* baja todo (nombres, estados,
 > personas, notas) y *Importar JSON* lo restaura.
 
-Lo mismo aplica al tracking automático: sin Vercel KV configurado, los eventos se guardan en
-`localStorage` y **solo vas a ver los que se generaron en tu propio dispositivo**. Las
-aperturas de tus invitados no llegan a ninguna parte. Para tener los datos reales de todos,
-configurá KV.
+Lo mismo aplica al tracking automático: **sin una base Redis conectada, los eventos se
+guardan en `localStorage`**. Y como el click ocurre en el teléfono del invitado, ese evento
+nunca llega a tu panel: vas a ver todo en cero y el auto-confirmado no se activa nunca. Es
+la diferencia entre marcar los estados a mano y que se marquen solos.
 
-Para activarlo: en el dashboard de Vercel → Storage → crear una base **Upstash Redis** y
-conectarla al proyecto. Eso inyecta `KV_REST_API_URL` y `KV_REST_API_TOKEN`, y las APIs
-empiezan a persistir solas. Después de conectarla hay que hacer un redeploy.
+Para activarlo:
+
+```bash
+vercel link
+vercel integration add upstash    # crea la base y conecta las variables
+vercel env pull .env.local --yes  # solo si querés correr vercel dev en local
+```
+
+También se puede desde el dashboard: Storage → **Upstash Redis** → conectar al proyecto.
+En cualquiera de los dos casos hace falta un **redeploy** después.
+
+> **Ojo:** `@vercel/kv` está discontinuado. La base ahora se provisiona por el Marketplace
+> y el cliente es `@upstash/redis`. `api/_kv.js` acepta tanto `UPSTASH_REDIS_REST_URL`/
+> `UPSTASH_REDIS_REST_TOKEN` como los viejos `KV_REST_API_*`.
 
 Podés cambiar las credenciales del panel con las variables de entorno `ADMIN_USER` y
 `ADMIN_PASS` (el login del cliente en `admin.js` sigue pidiendo adriano/adriano, así que

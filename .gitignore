@@ -7,3 +7,4 @@ links.csv
 invitados.json
 .playwright-cli/
 output/
+.env*

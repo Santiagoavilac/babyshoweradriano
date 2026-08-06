@@ -5,13 +5,18 @@ export const CREDENCIALES = {
   clave: process.env.ADMIN_PASS || 'adriano',
 };
 
-// Devuelve el cliente KV, o null si el proyecto no tiene KV configurado.
+// Devuelve el cliente Redis, o null si el proyecto no tiene base configurada.
 // En ese caso el frontend cae a localStorage.
-export async function getKv() {
-  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) return null;
+// Los dos juegos de nombres existen: la integración de Upstash inyecta UPSTASH_*,
+// y los proyectos que vienen del viejo Vercel KV siguen teniendo KV_*.
+export async function getRedis() {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+
   try {
-    const { kv } = await import('@vercel/kv');
-    return kv;
+    const { Redis } = await import('@upstash/redis');
+    return new Redis({ url, token });
   } catch {
     return null;
   }

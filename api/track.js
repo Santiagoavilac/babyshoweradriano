@@ -1,4 +1,4 @@
-import { KEY, getKv } from './_kv.js';
+import { KEY, getRedis } from './_kv.js';
 
 const EVENTOS = new Set(['view', 'open', 'rsvp_click']);
 
@@ -22,16 +22,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Evento desconocido' });
   }
 
-  const kv = await getKv();
-  if (!kv) {
-    // Sin KV configurado. El cliente ya guardó en localStorage.
-    return res.status(501).json({ error: 'KV no configurado' });
+  const redis = await getRedis();
+  if (!redis) {
+    // Sin base configurada. El cliente ya guardó en localStorage.
+    return res.status(501).json({ error: 'Base de datos no configurada' });
   }
 
   const id = String(slug || '_anonimo').slice(0, 80);
 
   try {
-    const actual = (await kv.hget(KEY, id)) || {};
+    const actual = (await redis.hget(KEY, id)) || {};
     const registro = typeof actual === 'string' ? JSON.parse(actual) : actual;
 
     registro.name = String(name || registro.name || 'Sin nombre').slice(0, 80);
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     registro.lastEvent = event;
     registro.lastAt = new Date().toISOString();
 
-    await kv.hset(KEY, { [id]: registro });
+    await redis.hset(KEY, { [id]: registro });
     return res.status(204).end();
   } catch (err) {
     return res.status(500).json({ error: 'No se pudo registrar el evento' });

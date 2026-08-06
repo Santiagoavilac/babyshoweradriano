@@ -1,4 +1,4 @@
-import { KEY, getKv, autorizado } from './_kv.js';
+import { KEY, getRedis, autorizado } from './_kv.js';
 
 export default async function handler(req, res) {
   if (!autorizado(req)) {
@@ -6,14 +6,14 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'No autorizado' });
   }
 
-  const kv = await getKv();
-  if (!kv) {
-    return res.status(501).json({ error: 'KV no configurado' });
+  const redis = await getRedis();
+  if (!redis) {
+    return res.status(501).json({ error: 'Base de datos no configurada' });
   }
 
   if (req.method === 'GET') {
     try {
-      const todos = (await kv.hgetall(KEY)) || {};
+      const todos = (await redis.hgetall(KEY)) || {};
       const invitados = Object.entries(todos).map(([slug, valor]) => {
         const r = typeof valor === 'string' ? JSON.parse(valor) : valor;
         return {
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'DELETE') {
     try {
-      await kv.del(KEY);
+      await redis.del(KEY);
       return res.status(204).end();
     } catch {
       return res.status(500).json({ error: 'No se pudieron limpiar los datos' });
