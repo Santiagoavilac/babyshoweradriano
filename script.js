@@ -339,7 +339,7 @@ musica.addEventListener('ended', () => {
 
 muteBtn.addEventListener('click', () => {
   musica.muted = !musica.muted;
-  muteBtn.textContent = musica.muted ? '🔇' : '🔊';
+  muteBtn.textContent = musica.muted ? 'Música off' : 'Música';
   muteBtn.setAttribute('aria-label', musica.muted ? 'Activar música' : 'Silenciar música');
 });
 
