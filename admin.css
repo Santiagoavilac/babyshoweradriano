@@ -21,7 +21,7 @@ body.admin {
 
 .login h1,
 .admin-head h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
   font-size: 1.4rem;
   color: var(--gold);
@@ -164,7 +164,7 @@ body.admin {
 
 .stats strong {
   display: block;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: 1.6rem;
   font-weight: 400;
   color: var(--gold);
@@ -199,7 +199,7 @@ th, td {
 }
 
 th {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
   font-size: 0.72rem;
   letter-spacing: 0.16em;

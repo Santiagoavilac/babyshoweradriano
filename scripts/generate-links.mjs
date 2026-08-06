@@ -91,7 +91,7 @@ for (const nombre of nombres) {
 
   const url = `${base}/${codigo}`;
   const mensaje =
-    `Te invitamos al Baby Shower de Adriano 🧸\n` +
+    `Te invitamos al Baby Shower de Adriano\n` +
     `Sábado 5 de Septiembre, 4:00 PM — Colinas del Urubo Club House\n${url}`;
 
   filas.push({ nombre: limpio, codigo, url, mensaje, yaExistia });

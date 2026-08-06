@@ -4,19 +4,19 @@ const CONFIG = {
   // Bolivia es UTC-4 todo el año (sin horario de verano), por eso el offset va fijo.
   fecha: '2026-09-05T16:00:00-04:00',
 
-  // El nombre del invitado no se muestra en ninguna parte del sitio.
-  // Si se activa, solo se usa el nombre que venga por ?n= — el mapeo
-  // código→nombre vive en el panel y nunca se publica acá.
-  showGuestName: false,
+  // El nombre no viaja nunca en la URL (quedaría en la vista previa de WhatsApp).
+  // La invitación cambia el código por el nombre contra /api/nombre, que resuelve
+  // de a uno: la lista completa sigue detrás del Basic Auth del panel.
+  showGuestName: true,
 
   // La canción entra recién en el segundo 46: la intro instrumental no acompaña
   // al video. Al terminar vuelve acá, no al principio.
   musicaDesde: 46,
 
-  whatsapp: '17867163274',
+  whatsapp: '59178006388',
   // Coordenadas exactas del lugar. Van así y no como link corto de Maps
   // porque los goo.gl caducan y estos links se mandan con meses de anticipación.
-  maps: 'https://www.google.com/maps/search/?api=1&query=-17.7502577,-63.2208668',
+  maps: 'https://www.google.com/maps/search/?api=1&query=-17.7475890,-63.2171060',
 
   evento: {
     fechaTexto: 'Sábado, 5 de Septiembre 2026',
@@ -154,15 +154,25 @@ for (const paso of CONFIG.programa) {
   programaLista.appendChild(li);
 }
 
-if (CONFIG.showGuestName) {
-  const nombre = (new URLSearchParams(location.search).get('n') || '').trim();
-  if (nombre) {
-    const p = document.createElement('p');
-    p.className = 'greeting';
-    p.textContent = `Para: ${nombre.slice(0, 80)}`;
-    document.getElementById('hero').prepend(p);
+const saludo = document.getElementById('saludo');
+
+// Si el servidor no contesta, la invitación queda sin saludo y no pasa nada más:
+// el nombre es un adorno, no un requisito para leerla.
+async function mostrarSaludo() {
+  if (!CONFIG.showGuestName || !guestId) return;
+  try {
+    const res = await fetch(`/api/nombre?id=${encodeURIComponent(guestId)}`);
+    if (!res.ok) return;
+    const { name } = await res.json();
+    if (!name) return;
+    saludo.textContent = name;
+    saludo.hidden = false;
+  } catch (_) {
+    /* sin conexión */
   }
 }
+
+mostrarSaludo();
 
 document.getElementById('rsvpBtn').addEventListener('click', () => {
   track('rsvp_click');

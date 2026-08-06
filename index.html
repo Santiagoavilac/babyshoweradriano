@@ -27,7 +27,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Montserrat:wght@200;300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -45,7 +45,7 @@
 
   <div id="introHint">
     <p class="intro-name">Adriano</p>
-    <p class="intro-tap">Toca para abrir <span aria-hidden="true">✨</span></p>
+    <p class="intro-tap">Toca para abrir</p>
   </div>
 
   <button id="skipBtn" type="button" hidden>Saltar ›</button>
@@ -58,6 +58,7 @@
 <main id="content" hidden>
 
   <section id="hero" class="section hero">
+    <p id="saludo" class="greeting" hidden></p>
     <p class="eyebrow">Baby Shower</p>
     <h1 class="name">Adriano</h1>
     <p class="subtitle">Una pequeña gran celebración</p>
@@ -87,17 +88,14 @@
   <section id="detalles" class="section">
     <h2 class="section-title">Los detalles</h2>
     <div class="detail">
-      <span class="detail-icon" aria-hidden="true">📅</span>
       <h3>Fecha</h3>
       <p id="detFecha"></p>
     </div>
     <div class="detail">
-      <span class="detail-icon" aria-hidden="true">🕓</span>
       <h3>Hora</h3>
       <p id="detHora"></p>
     </div>
     <div class="detail">
-      <span class="detail-icon" aria-hidden="true">📍</span>
       <h3>Lugar</h3>
       <p id="detLugar"></p>
       <p id="detLugarDetalle" class="detail-sub"></p>
@@ -118,7 +116,7 @@
   <section id="llegar" class="section">
     <h2 class="section-title">Cómo llegar</h2>
     <p class="lead soft">Te esperamos en Colinas del Urubo.</p>
-    <a id="mapsBtn" class="btn btn-ghost" href="#" target="_blank" rel="noopener">📍 Abrir en Google Maps</a>
+    <a id="mapsBtn" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a>
   </section>
 
   <section id="rsvp" class="section">
@@ -130,8 +128,8 @@
 
 </main>
 
-<button id="muteBtn" class="replay mute" type="button" aria-label="Silenciar música" hidden>🔊</button>
-<button id="replayBtn" class="replay" type="button" hidden>📩 Ver de nuevo</button>
+<button id="muteBtn" class="replay mute" type="button" aria-label="Silenciar música" hidden>Música</button>
+<button id="replayBtn" class="replay" type="button" hidden>Ver de nuevo</button>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="/script.js"></script>
