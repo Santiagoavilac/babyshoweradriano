@@ -1,10 +1,15 @@
 :root {
-  --gold: #d4af37;
-  --gold-soft: rgba(212, 175, 55, 0.28);
-  --bg: #000000;
-  --card: #0d0d0d;
-  --text: #f2ede4;
-  --muted: #9d968a;
+  --gold: #d9b64a;
+  --gold-soft: rgba(217, 182, 74, 0.3);
+  --bg: #4a0d14;
+  --card: #5c1119;
+  --text: #f7efe3;
+  --muted: #d1a89e;
+
+  /* El azul de los detalles va aclarado: un azul noche sobre vino oscuro son
+     dos colores oscuros y los bordes y puntos desaparecen. */
+  --blue: #7fa8dc;
+  --blue-soft: rgba(127, 168, 220, 0.32);
 }
 
 * { box-sizing: border-box; }
@@ -98,7 +103,7 @@ video::-webkit-media-controls-overlay-play-button {
   letter-spacing: 0.12em;
   color: rgba(242, 237, 228, 0.75);
   background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid var(--blue-soft);
   border-radius: 999px;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -145,7 +150,7 @@ video::-webkit-media-controls-overlay-play-button {
 }
 
 .section + .section {
-  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  border-top: 1px solid rgba(127, 168, 220, 0.18);
 }
 
 .hero {
@@ -226,7 +231,7 @@ video::-webkit-media-controls-overlay-play-button {
   top: 50%;
   width: 28%;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-soft), transparent);
+  background: linear-gradient(to right, transparent, var(--blue-soft), transparent);
 }
 .divider::before { left: 8%; }
 .divider::after  { right: 8%; }
@@ -251,7 +256,7 @@ video::-webkit-media-controls-overlay-play-button {
 .scroll-line {
   width: 1px;
   height: 2.6rem;
-  background: linear-gradient(to bottom, transparent, var(--gold));
+  background: linear-gradient(to bottom, transparent, var(--blue));
   transform-origin: top;
   animation: scrollPulse 2.2s ease-in-out infinite;
 }
@@ -280,7 +285,7 @@ video::-webkit-media-controls-overlay-play-button {
 
 .cd-cell {
   background: var(--card);
-  border: 1px solid var(--gold-soft);
+  border: 1px solid var(--blue-soft);
   border-radius: 0.6rem;
   padding: 0.9rem 0.3rem;
   text-align: center;
@@ -316,7 +321,7 @@ video::-webkit-media-controls-overlay-play-button {
 
 .detail {
   background: var(--card);
-  border: 1px solid var(--gold-soft);
+  border: 1px solid var(--blue-soft);
   border-radius: 0.8rem;
   padding: 1.5rem 1.25rem;
 }
@@ -365,7 +370,7 @@ video::-webkit-media-controls-overlay-play-button {
   top: 0.5rem;
   bottom: 0.5rem;
   width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--gold-soft) 12%, var(--gold-soft) 88%, transparent);
+  background: linear-gradient(to bottom, transparent, var(--blue-soft) 12%, var(--blue-soft) 88%, transparent);
 }
 
 .timeline li {
@@ -383,8 +388,8 @@ video::-webkit-media-controls-overlay-play-button {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+  background: var(--blue);
+  box-shadow: 0 0 0 4px rgba(127, 168, 220, 0.16);
 }
 
 .tl-hora {
@@ -432,7 +437,7 @@ video::-webkit-media-controls-overlay-play-button {
   letter-spacing: 0.1em;
   color: var(--gold);
   background: transparent;
-  border: 1px solid var(--gold-soft);
+  border: 1px solid var(--blue-soft);
 }
 
 .btn-gold {
@@ -445,7 +450,7 @@ video::-webkit-media-controls-overlay-play-button {
   color: #1a1405;
   background: linear-gradient(135deg, #e8c968, var(--gold) 55%, #b8912a);
   border: none;
-  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .rsvp-note {
@@ -474,8 +479,8 @@ video::-webkit-media-controls-overlay-play-button {
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   color: var(--gold);
-  background: rgba(13, 13, 13, 0.82);
-  border: 1px solid var(--gold-soft);
+  background: rgba(74, 13, 20, 0.85);
+  border: 1px solid var(--blue-soft);
   border-radius: 999px;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);

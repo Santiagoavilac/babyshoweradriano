@@ -43,8 +43,8 @@ body.admin {
   font-size: 1rem;
   padding: 0.7rem 0.8rem;
   color: var(--text);
-  background: #000;
-  border: 1px solid var(--gold-soft);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--blue-soft);
   border-radius: 0.5rem;
 }
 
@@ -83,7 +83,7 @@ body.admin {
 }
 
 .note {
-  background: rgba(212, 175, 55, 0.08);
+  background: rgba(217, 182, 74, 0.08);
   border: 1px solid var(--gold-soft);
   border-radius: 0.5rem;
   padding: 0.8rem 1rem;
@@ -113,8 +113,8 @@ body.admin {
   font-size: 0.95rem;
   padding: 0.6rem 0.8rem;
   color: var(--text);
-  background: #000;
-  border: 1px solid var(--gold-soft);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--blue-soft);
   border-radius: 0.5rem;
 }
 
@@ -136,7 +136,7 @@ body.admin {
   padding: 0.45rem 1rem;
   color: var(--muted);
   background: transparent;
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--blue-soft);
   border-radius: 999px;
   cursor: pointer;
 }
@@ -144,7 +144,7 @@ body.admin {
 .filter.active {
   color: var(--gold);
   border-color: var(--gold);
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(217, 182, 74, 0.12);
 }
 
 .stats {
@@ -181,7 +181,7 @@ body.admin {
 
 .table-wrap {
   overflow-x: auto;
-  border: 1px solid var(--gold-soft);
+  border: 1px solid var(--blue-soft);
   border-radius: 0.6rem;
 }
 
@@ -195,7 +195,7 @@ th, td {
   padding: 0.8rem 0.9rem;
   text-align: left;
   white-space: nowrap;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  border-bottom: 1px solid rgba(127, 168, 220, 0.16);
 }
 
 th {
@@ -225,8 +225,8 @@ td.unknown { color: var(--muted); font-style: italic; }
   font-size: 0.85rem;
   padding: 0.4rem 0.5rem;
   color: var(--text);
-  background: #000;
-  border: 1px solid var(--gold-soft);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--blue-soft);
   border-radius: 0.4rem;
 }
 
@@ -252,9 +252,9 @@ td.unknown { color: var(--muted); font-style: italic; }
 .notes  { width: 12rem; }
 
 .stats .highlight {
-  background: rgba(212, 175, 55, 0.12);
+  background: rgba(217, 182, 74, 0.14);
   border-color: var(--gold);
 }
 
 .yes { color: #7fc98a; }
-.no  { color: #5c5850; }
+.no  { color: #8f6a68; }

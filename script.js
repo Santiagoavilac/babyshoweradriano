@@ -10,7 +10,9 @@ const CONFIG = {
   showGuestName: false,
 
   whatsapp: '17867163274',
-  maps: 'https://www.google.com/maps/search/?api=1&query=Colinas+del+Urubo+Club+House',
+  // Coordenadas exactas del lugar. Van así y no como link corto de Maps
+  // porque los goo.gl caducan y estos links se mandan con meses de anticipación.
+  maps: 'https://www.google.com/maps/search/?api=1&query=-17.7502577,-63.2208668',
 
   evento: {
     fechaTexto: 'Sábado, 5 de Septiembre 2026',
