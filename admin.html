@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel — Baby Shower Adriano</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/admin.css">
+</head>
+<body class="admin">
+
+<form id="loginForm" class="panel login">
+  <h1>Panel de invitados</h1>
+  <label>Usuario <input id="userInput" type="text" autocomplete="username" required></label>
+  <label>Contraseña <input id="passInput" type="password" autocomplete="current-password" required></label>
+  <button class="btn btn-gold" type="submit">Entrar</button>
+  <p id="loginError" class="error" hidden>Credenciales incorrectas</p>
+</form>
+
+<main id="dashboard" class="panel" hidden>
+  <header class="admin-head">
+    <h1>Invitados</h1>
+    <div class="actions">
+      <button id="importBtn" class="btn btn-ghost" type="button">Importar JSON</button>
+      <button id="exportBtn" class="btn btn-ghost" type="button">Exportar JSON</button>
+      <button id="csvBtn" class="btn btn-ghost" type="button">Exportar CSV</button>
+      <button id="refreshBtn" class="btn btn-ghost" type="button">Refrescar</button>
+      <button id="clearBtn" class="btn btn-ghost danger" type="button">Limpiar datos</button>
+    </div>
+  </header>
+
+  <input id="importFile" type="file" accept="application/json,.json" hidden>
+
+  <p class="note warn">
+    <strong>Respaldá seguido.</strong> No hay base de datos: la lista y los estados viven en
+    este navegador. Si limpiás el caché, se pierden. Usá <em>Exportar JSON</em>.
+  </p>
+
+  <p id="storageNote" class="note" hidden></p>
+
+  <form id="addForm" class="add-form">
+    <input id="addName" type="text" placeholder="Nombre del invitado" required>
+    <button class="btn btn-ghost" type="submit">Agregar</button>
+  </form>
+
+  <div class="stats">
+    <div><strong id="statConfirmados">0</strong><small>confirmados</small></div>
+    <div><strong id="statPendientes">0</strong><small>sin confirmar</small></div>
+    <div><strong id="statNoAsisten">0</strong><small>no asisten</small></div>
+    <div class="highlight"><strong id="statPersonas">0</strong><small>personas</small></div>
+  </div>
+
+  <div class="filters" role="group" aria-label="Filtrar por estado">
+    <button class="filter active" type="button" data-filter="todos">Todos</button>
+    <button class="filter" type="button" data-filter="sin_confirmar">Sin confirmar</button>
+    <button class="filter" type="button" data-filter="confirmado">Confirmados</button>
+    <button class="filter" type="button" data-filter="no_asiste">No asisten</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Invitado</th>
+          <th>Estado</th>
+          <th>Personas</th>
+          <th>Notas</th>
+          <th>Abrió</th>
+          <th>Confirmó</th>
+          <th>Último evento</th>
+          <th>Visitas</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <p id="emptyState" class="note" hidden>
+    Todavía no hay invitados. Importá el <code>invitados.json</code> que genera el script de links.
+  </p>
+</main>
+
+<script src="/admin.js"></script>
+</body>
+</html>

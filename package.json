@@ -1,0 +1,15 @@
+{
+  "name": "babyshower-adriano",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Invitación digital de Baby Shower — Adriano",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "assets": "bash scripts/build-assets.sh",
+    "links": "node scripts/generate-links.mjs"
+  },
+  "dependencies": {
+    "@vercel/kv": "^3.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+.vercel
+.DS_Store
+links.csv
+
+# Contienen nombres reales de invitados
+invitados.json
+.playwright-cli/
+output/
