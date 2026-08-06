@@ -156,28 +156,41 @@ for (const paso of CONFIG.programa) {
 
 const saludo = document.getElementById('saludo');
 
+// Se resuelve una sola vez al cargar y queda acá porque lo usan dos cosas: el
+// saludo del hero y, sobre todo, el mensaje de WhatsApp. El código sirve para
+// que el nombre no viaje en el link, pero a la decoradora le tiene que llegar
+// un nombre, no un código que después tenga que ir a buscar al panel.
+let guestName = null;
+
 // Si el servidor no contesta, la invitación queda sin saludo y no pasa nada más:
-// el nombre es un adorno, no un requisito para leerla.
-async function mostrarSaludo() {
-  if (!CONFIG.showGuestName || !guestId) return;
+// el nombre es un adorno para leerla, y el mensaje cae de vuelta al código.
+async function resolverNombre() {
+  if (!guestId) return;
   try {
     const res = await fetch(`/api/nombre?id=${encodeURIComponent(guestId)}`);
     if (!res.ok) return;
     const { name } = await res.json();
     if (!name) return;
-    saludo.textContent = name;
-    saludo.hidden = false;
+    guestName = name;
+    if (CONFIG.showGuestName) {
+      saludo.textContent = name;
+      saludo.hidden = false;
+    }
   } catch (_) {
     /* sin conexión */
   }
 }
 
-mostrarSaludo();
+resolverNombre();
 
 document.getElementById('rsvpBtn').addEventListener('click', () => {
   track('rsvp_click');
-  const texto = CONFIG.mensaje + (guestId ? ` [ref: ${guestId}]` : '');
-  location.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
+  const firma = guestName
+    ? `\n\nSoy ${guestName}.`
+    : guestId
+      ? `\n\n[ref: ${guestId}]`
+      : '';
+  location.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.mensaje + firma)}`;
 });
 
 /* ---------- Contador regresivo ---------- */
