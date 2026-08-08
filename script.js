@@ -9,9 +9,9 @@ const CONFIG = {
   // de a uno: la lista completa sigue detrás del Basic Auth del panel.
   showGuestName: true,
 
-  // La canción entra recién en el segundo 46: la intro instrumental no acompaña
-  // al video. Al terminar vuelve acá, no al principio.
-  musicaDesde: 46,
+  // Segundo desde el que arranca la música (por defecto; cada canción puede
+  // pisarlo con su propio `desde`). Al terminar vuelve acá, no al principio.
+  musicaDesde: 0,
 
   whatsapp: '59178006388',
   // Coordenadas exactas del lugar. Van así y no como link corto de Maps
@@ -29,27 +29,44 @@ const CONFIG = {
 
   bienvenida:
     'Estamos contando los días para conocer a Adriano, y queremos celebrar su llegada ' +
-    'rodeados de las personas que más queremos. Será una tarde tranquila, con buena ' +
-    'comida y mucha alegría. Tu presencia es el mejor regalo.',
-
-  programa: [
-    { hora: '4:00 PM', titulo: 'Recepción', detalle: 'Bienvenida y bocaditos' },
-    { hora: '4:45 PM', titulo: 'Brindis', detalle: 'Unas palabras para Adriano' },
-    { hora: '5:15 PM', titulo: 'Juegos', detalle: 'Sorpresas para los invitados' },
-    { hora: '6:30 PM', titulo: 'Cena', detalle: 'A la mesa' },
-  ],
+    'rodeados de las personas que más queremos. Será una tarde para compartir, con buena ' +
+    'comida y mucha alegría. Tu presencia es muy importante para nosotros.',
 
   mensaje:
     '¡Hola! Quiero confirmar mi asistencia al Baby Shower de Adriano (5 de septiembre, 4:00 PM).',
 
   rsvpNota:
-    'Al confirmar se abre un chat de WhatsApp. La decoradora te responderá para coordinar ' +
-    'con cuántas personas asistís.',
+    'Escribí tu nombre y confirmá. Se abrirá un chat de WhatsApp para avisarnos que venís.',
 };
+
+/* ---------- Música: una versión por canción ---------- */
+
+// Cada canción vive en su subcarpeta y tiene su propia ruta (link) para compartir.
+// Ej: /yellow, /stand-by-me, /take-five, /fly-me-to-the-moon
+const SONGS = {
+  'yellow':             { file: '/public/musica/yellow/audio.mp3',              titulo: 'Yellow — Coldplay',            desde: 0 },
+  'stand-by-me':        { file: '/public/musica/stand-by-me/audio.mp3',         titulo: 'Stand by Me — Ben E. King',    desde: 0 },
+  'take-five':          { file: '/public/musica/take-five/audio.mp3',           titulo: 'Take Five — Dave Brubeck',     desde: 0 },
+  'fly-me-to-the-moon': { file: '/public/musica/fly-me-to-the-moon/audio.mp3',  titulo: 'Fly Me To The Moon — Sinatra', desde: 0 },
+};
+const SONG_DEFAULT = 'stand-by-me';
 
 const RESERVADOS = new Set([
   'admin', 'api', 'index.html', 'favicon.svg', 'og.jpg', 'style.css', 'script.js',
+  'public', ...Object.keys(SONGS),
 ]);
+
+// El slug de canción puede venir en el path (/yellow) o como ?m=yellow.
+function resolveSong() {
+  const params = new URLSearchParams(location.search);
+  const pathSeg = decodeURIComponent(location.pathname).split('/').filter(Boolean)[0] || '';
+  const slug = (params.get('m') || pathSeg).trim().toLowerCase();
+  return SONGS[slug] ? slug : SONG_DEFAULT;
+}
+
+const songSlug = resolveSong();
+const song = SONGS[songSlug];
+CONFIG.musicaDesde = song.desde;
 
 /* ---------- Invitado ---------- */
 
@@ -116,6 +133,7 @@ const skipBtn = document.getElementById('skipBtn');
 const replayBtn = document.getElementById('replayBtn');
 const scrollHint = document.getElementById('scrollHint');
 const musica = document.getElementById('musicaEl');
+musica.src = song.file;
 const muteBtn = document.getElementById('muteBtn');
 
 const { evento } = CONFIG;
@@ -129,30 +147,6 @@ document.getElementById('dressCode').textContent = evento.dressCode;
 document.getElementById('dressCodeNota').textContent = evento.dressCodeNota;
 document.getElementById('rsvpNota').textContent = CONFIG.rsvpNota;
 document.getElementById('mapsBtn').href = CONFIG.maps;
-
-const programaLista = document.getElementById('programaLista');
-for (const paso of CONFIG.programa) {
-  const li = document.createElement('li');
-
-  const hora = document.createElement('span');
-  hora.className = 'tl-hora';
-  hora.textContent = paso.hora;
-
-  const titulo = document.createElement('span');
-  titulo.className = 'tl-titulo';
-  titulo.textContent = paso.titulo;
-
-  li.append(hora, titulo);
-
-  if (paso.detalle) {
-    const detalle = document.createElement('span');
-    detalle.className = 'tl-detalle';
-    detalle.textContent = paso.detalle;
-    li.appendChild(detalle);
-  }
-
-  programaLista.appendChild(li);
-}
 
 const saludo = document.getElementById('saludo');
 
@@ -176,6 +170,12 @@ async function resolverNombre() {
       saludo.textContent = name;
       saludo.hidden = false;
     }
+    // Link viejo con ID: precargamos el nombre para que no lo reescriban.
+    const input = document.getElementById('rsvpNombre');
+    if (input && !input.value) {
+      input.value = name;
+      document.getElementById('rsvpBtn').disabled = false;
+    }
   } catch (_) {
     /* sin conexión */
   }
@@ -183,14 +183,21 @@ async function resolverNombre() {
 
 resolverNombre();
 
-document.getElementById('rsvpBtn').addEventListener('click', () => {
+const rsvpBtn = document.getElementById('rsvpBtn');
+const rsvpNombre = document.getElementById('rsvpNombre');
+
+// El botón queda deshabilitado hasta que el invitado escriba su nombre: el
+// mensaje a los papás tiene que llegar siempre firmado, no anónimo.
+rsvpNombre.addEventListener('input', () => {
+  rsvpBtn.disabled = rsvpNombre.value.trim() === '';
+});
+
+rsvpBtn.addEventListener('click', () => {
+  const nombre = rsvpNombre.value.trim();
+  if (!nombre) return;
   track('rsvp_click');
-  const firma = guestName
-    ? `\n\nSoy ${guestName}.`
-    : guestId
-      ? `\n\n[ref: ${guestId}]`
-      : '';
-  location.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.mensaje + firma)}`;
+  const texto = `${CONFIG.mensaje}\n\nSoy ${nombre}.`;
+  location.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
 });
 
 /* ---------- Contador regresivo ---------- */
@@ -227,24 +234,71 @@ function tick() {
 tick();
 timer = setInterval(tick, 1000);
 
-/* ---------- Reveal por scroll ---------- */
+/* ---------- Reveal por scroll (GSAP ScrollTrigger) ---------- */
 
 const secciones = document.querySelectorAll('.section');
-let observer;
+const hasST = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+let scrollAnimBuilt = false;
 
-function activarScrollReveal() {
-  document.getElementById('hero').classList.add('visible');
+// Sin GSAP/ScrollTrigger (o con motion reducido) mostramos todo de una: la
+// invitación nunca depende de la animación para poder leerse.
+function mostrarTodo() {
+  for (const s of secciones) s.classList.add('visible');
+}
 
-  observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+function buildScrollAnim() {
+  if (scrollAnimBuilt) return;
+  scrollAnimBuilt = true;
+
+  if (reducedMotion || !hasST) {
+    mostrarTodo();
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+  mostrarTodo(); // la caja de la sección queda visible; animamos sus hijos.
 
   for (const s of secciones) {
-    if (!s.classList.contains('visible')) observer.observe(s);
+    // Revelado escalonado de los hijos (no del panel ni del oso, que tiene su
+    // propio parallax). El scrollHint del hero conserva su pulso propio.
+    const hijos = [...s.children].filter((el) =>
+      !el.classList.contains('oso') &&
+      !el.classList.contains('countdown') &&
+      el.id !== 'scrollHint');
+
+    gsap.from(hijos, {
+      y: 24,
+      autoAlpha: 0,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: s, start: 'top 80%', once: true },
+    });
+
+    // Parallax sutil del oso: sube apenas al pasar la sección.
+    const oso = s.querySelector('.oso');
+    if (oso) {
+      gsap.fromTo(oso, { yPercent: 8 }, {
+        yPercent: -8,
+        ease: 'none',
+        scrollTrigger: { trigger: s, start: 'top bottom', end: 'bottom top', scrub: true },
+      });
+    }
+  }
+
+  // Las celdas del contador entran con un rebote leve. No se animan los números:
+  // los actualiza tick() cada segundo.
+  const celdas = document.querySelectorAll('.cd-cell');
+  if (celdas.length) {
+    gsap.from(celdas, {
+      autoAlpha: 0,
+      y: 16,
+      scale: 0.9,
+      duration: 0.5,
+      stagger: 0.08,
+      ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '#cuenta', start: 'top 75%', once: true },
+    });
   }
 }
 
@@ -268,9 +322,10 @@ function showContent() {
   document.body.classList.remove('locked');
   replayBtn.hidden = false;
 
-  // El observer se crea recién acá: con #content oculto las secciones miden 0
-  // y todas se marcarían como visibles de golpe.
-  if (!observer) activarScrollReveal();
+  // Se arma recién acá: con #content oculto las secciones miden 0 y los
+  // ScrollTriggers calcularían mal sus posiciones.
+  buildScrollAnim();
+  if (hasST) ScrollTrigger.refresh();
 }
 
 function reveal(fast = false) {
@@ -364,6 +419,9 @@ replayBtn.addEventListener('click', () => {
   document.body.classList.add('locked');
   window.scrollTo(0, 0);
   if (hasGsap) gsap.set(flash, { opacity: 0 });
+  // Al reponer el contenido cambian las medidas; recalcular para que los
+  // ScrollTriggers y el parallax sigan alineados.
+  if (hasST) ScrollTrigger.refresh();
   film.currentTime = 0;
   startFilm();
 });

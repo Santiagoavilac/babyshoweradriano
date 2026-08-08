@@ -51,29 +51,17 @@
   <button id="skipBtn" type="button" hidden>Saltar ›</button>
 </div>
 
-<audio id="musicaEl" src="/public/deep-in-it.mp3" preload="auto"></audio>
+<audio id="musicaEl" preload="auto"></audio>
 
 <div id="flash" aria-hidden="true"></div>
 
 <main id="content" hidden>
 
   <section id="hero" class="section hero">
-    <img class="oso oso-hero" src="/public/osos/3.webp" alt="" aria-hidden="true" decoding="async" width="214" height="460">
     <p id="saludo" class="greeting" hidden></p>
-    <p class="eyebrow">Baby Shower</p>
-    <h1 class="name">Adriano</h1>
+    <img class="crest" src="/public/sellos/escudo.webp" alt="Baby Shower Adriano" decoding="async" width="900" height="1350">
     <p class="subtitle">Una pequeña gran celebración</p>
-    <div class="divider" aria-hidden="true">✦</div>
-
-    <div class="countdown" aria-label="Cuenta regresiva">
-      <div class="cd-grid">
-        <div class="cd-cell"><span id="cdDays">--</span><small>días</small></div>
-        <div class="cd-cell"><span id="cdHours">--</span><small>horas</small></div>
-        <div class="cd-cell"><span id="cdMinutes">--</span><small>min</small></div>
-        <div class="cd-cell"><span id="cdSeconds">--</span><small>seg</small></div>
-      </div>
-      <p id="cdMessage" class="cd-message" hidden></p>
-    </div>
+    <p class="parents">Marcelo &amp; Adriana</p>
 
     <div id="scrollHint" class="scroll-hint" aria-hidden="true">
       <span class="scroll-line"></span>
@@ -81,15 +69,15 @@
     </div>
   </section>
 
-  <section id="bienvenida" class="section">
-    <img class="oso oso-izq" src="/public/osos/2.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="460" height="423">
-    <img class="sobre" src="/public/sobre/invitacion-abierta.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="900" height="610">
+  <section id="bienvenida" class="section section--cream">
+    <div class="mono-sep" aria-hidden="true"><img src="/public/sellos/monograma.webp" alt="" loading="lazy" decoding="async" width="480" height="720"></div>
     <h2 class="section-title">Bienvenidos</h2>
     <p id="bienvenidaTexto" class="lead"></p>
+    <img class="oso oso-right" src="/public/osos/1.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="364" height="460">
   </section>
 
-  <section id="detalles" class="section">
-    <img class="oso oso-der" src="/public/osos/1.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="364" height="460">
+  <section id="detalles" class="section section--navy">
+    <div class="mono-sep" aria-hidden="true"><img src="/public/sellos/monograma.webp" alt="" loading="lazy" decoding="async" width="480" height="720"></div>
     <h2 class="section-title">Los detalles</h2>
     <div class="detail">
       <h3>Fecha</h3>
@@ -104,37 +92,54 @@
       <p id="detLugar"></p>
       <p id="detLugarDetalle" class="detail-sub"></p>
     </div>
+    <img class="oso oso-left" src="/public/osos/golf-1.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="820" height="1025">
   </section>
 
-  <section id="dresscode" class="section">
-    <img class="oso oso-izq oso-grande" src="/public/osos/5.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="286" height="460">
+  <section id="dresscode" class="section section--cream">
+    <div class="mono-sep" aria-hidden="true"><img src="/public/sellos/monograma.webp" alt="" loading="lazy" decoding="async" width="480" height="720"></div>
     <h2 class="section-title">Dress Code</h2>
     <p id="dressCode" class="feature-word"></p>
     <p id="dressCodeNota" class="lead soft"></p>
+    <ul class="swatches" aria-hidden="true">
+      <li class="swatch swatch-navy"></li>
+      <li class="swatch swatch-green"></li>
+      <li class="swatch swatch-gold"></li>
+      <li class="swatch swatch-cream"></li>
+    </ul>
+    <img class="oso oso-right" src="/public/osos/5.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="286" height="460">
   </section>
 
-  <section id="programa" class="section">
-    <article class="tarjeta">
-      <img class="tarjeta-sello" src="/public/sobre/sello.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="410" height="420">
-      <h2 class="tarjeta-titulo">Cómo será el evento</h2>
-      <div class="tarjeta-filete" aria-hidden="true"></div>
-      <ol id="programaLista" class="programa-lista"></ol>
-    </article>
-  </section>
-
-  <section id="llegar" class="section">
-    <img class="oso oso-der" src="/public/osos/4.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="395" height="460">
+  <section id="llegar" class="section section--navy section--arch">
+    <div class="mono-sep" aria-hidden="true"><img src="/public/sellos/monograma.webp" alt="" loading="lazy" decoding="async" width="480" height="720"></div>
     <h2 class="section-title">Cómo llegar</h2>
     <p class="lead soft">Te esperamos en Colinas del Urubo.</p>
     <a id="mapsBtn" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a>
+    <img class="oso oso-left" src="/public/osos/golf-4.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="820" height="1025">
   </section>
 
-  <section id="rsvp" class="section">
-    <img class="oso oso-izq" src="/public/osos/3.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="214" height="460">
+  <section id="rsvp" class="section section--cream">
+    <div class="mono-sep" aria-hidden="true"><img src="/public/sellos/monograma.webp" alt="" loading="lazy" decoding="async" width="480" height="720"></div>
     <h2 class="section-title">Confirmá tu asistencia</h2>
-    <button id="rsvpBtn" class="btn btn-gold" type="button">Confirmar asistencia</button>
+    <input id="rsvpNombre" class="rsvp-input" type="text" autocomplete="name" placeholder="Tu nombre" aria-label="Tu nombre">
+    <button id="rsvpBtn" class="btn btn-gold" type="button" disabled>Asistir</button>
     <p id="rsvpNota" class="rsvp-note"></p>
-    <img class="footer-sello" src="/public/sobre/sello.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="410" height="420">
+    <img class="oso oso-right" src="/public/osos/3.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="214" height="460">
+  </section>
+
+  <section id="cuenta" class="section section--navy">
+    <div class="mono-sep" aria-hidden="true"><img src="/public/sellos/monograma.webp" alt="" loading="lazy" decoding="async" width="480" height="720"></div>
+    <img class="oso oso-left" src="/public/osos/golf-5.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="820" height="1025">
+    <h2 class="section-title">La cuenta atrás</h2>
+    <div class="countdown" aria-label="Cuenta regresiva">
+      <div class="cd-grid">
+        <div class="cd-cell"><span id="cdDays">--</span><small>días</small></div>
+        <div class="cd-cell"><span id="cdHours">--</span><small>horas</small></div>
+        <div class="cd-cell"><span id="cdMinutes">--</span><small>min</small></div>
+        <div class="cd-cell"><span id="cdSeconds">--</span><small>seg</small></div>
+      </div>
+      <p id="cdMessage" class="cd-message" hidden></p>
+    </div>
+    <img class="insignia" src="/public/sellos/insignia.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="700" height="1050">
   </section>
 
 </main>
@@ -143,6 +148,7 @@
 <button id="replayBtn" class="replay" type="button" hidden>Ver de nuevo</button>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="/script.js"></script>
 </body>
 </html>

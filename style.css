@@ -13,6 +13,23 @@
   --blue: #8fa6bd;
   --blue-soft: rgba(154, 176, 199, 0.26);
 
+  /* Verde inglés (hunter): el segundo acento Ralph Lauren, el mismo del laurel
+     de los sellos y del tartán de los osos. Va apagado, nunca esmeralda. */
+  --green: #22402e;
+  --green-mid: #35583f;
+  --green-soft: rgba(53, 88, 63, 0.32);
+
+  /* Crema y tintas: los paneles claros alternan con el navy (como las
+     invitaciones de referencia). Sobre crema el texto va en tinta navy y el
+     acento en un latón más oscuro para que contraste. */
+  --cream: #f3ede1;
+  --ink: #16293c;
+  --ink-body: #35485c;
+  --ink-muted: #8a7c5c;
+  --gold-ink: #997c3f;
+  --ink-rule: rgba(22, 41, 60, 0.18);
+  --ink-rule-faint: rgba(22, 41, 60, 0.1);
+
   /* Los filetes son la unidad de medida de este diseño: una papelería grabada
      no tiene cajas ni sombras, tiene líneas de un pelo. */
   --rule: rgba(195, 168, 120, 0.28);
@@ -56,6 +73,19 @@ body::after {
 }
 
 body.locked { overflow: hidden; }
+
+/* Marco grabado fijo: un doble filete de oro por dentro del borde de la pantalla.
+   Es lo que separa "página web" de "invitación enmarcada", y llena el vacío de
+   los bordes. Va sobre el fondo pero debajo del intro (z-index 100). */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0.7rem;
+  z-index: 3;
+  pointer-events: none;
+  border: 1px solid var(--gold-soft);
+  box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 4px var(--green-soft);
+}
 
 [hidden] { display: none !important; }
 
@@ -166,19 +196,33 @@ video::-webkit-media-controls-overlay-play-button {
 /* ---------- Contenido ---------- */
 
 #content {
+  position: relative;
+  z-index: 1;
   max-width: 33rem;
   margin: 0 auto;
   padding: 0 1.5rem 7rem;
 }
 
+/* Tokens semánticos por sección: cada variante los redefine y todos los
+   componentes (títulos, texto, filetes, botones) leen de acá. Así una sola
+   clase cambia texto claro sobre navy por tinta navy sobre crema. */
 .section {
   position: relative;
   text-align: center;
-  padding: clamp(4rem, 15vw, 6.5rem) 0;
+  padding: clamp(3rem, 10vw, 4.5rem) 0;
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
+
+  --fg: var(--text);
+  --fg-strong: var(--ivory);
+  --fg-muted: var(--muted);
+  --accent: var(--gold);
+  --rule-c: var(--rule);
+  --rule-faint-c: var(--rule-faint);
+  --btn-bg: var(--ivory);
+  --btn-fg: #16293c;
 }
 
 .section.visible {
@@ -186,70 +230,131 @@ video::-webkit-media-controls-overlay-play-button {
   transform: none;
 }
 
-/* Los osos Polo son decoración, no contenido: van detrás del texto, sangrados
-   por el borde de la pantalla, y nunca deben empujar el layout ni capturar un
-   toque. El z-index negativo funciona porque .section crea contexto de apilado
-   (tiene transform) y no tiene fondo propio: quedan sobre el papel, bajo la
-   tipografía. */
+/* Paneles: cada sección de contenido es una tarjeta con esquinas redondeadas que
+   flota sobre el navy, alternando crema y navy como las invitaciones de
+   referencia. El foco (un oso) queda recortado prolijo por el borde de la
+   tarjeta: isolation+overflow lo mantienen dentro y detrás del texto. */
+.section--cream,
+.section--navy {
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1.6rem;
+  padding: clamp(2.6rem, 8vw, 3.6rem) clamp(1.5rem, 6vw, 2.2rem) clamp(8rem, 11vw, 9.5rem);
+  margin-bottom: clamp(1.4rem, 5vw, 2.2rem);
+}
+
+.section--cream {
+  background: var(--cream);
+  border: 1px solid var(--gold-soft);
+  box-shadow: 0 20px 44px -22px rgba(0, 0, 0, 0.6);
+  --fg: var(--ink-body);
+  --fg-strong: var(--ink);
+  --fg-muted: var(--ink-muted);
+  --accent: var(--gold-ink);
+  --rule-c: var(--ink-rule);
+  --rule-faint-c: var(--ink-rule-faint);
+  --btn-bg: var(--ink);
+  --btn-fg: var(--cream);
+}
+
+.section--navy {
+  background: linear-gradient(180deg, var(--card), var(--bg-deep));
+  border: 1px solid var(--rule-faint);
+  box-shadow: 0 20px 44px -24px rgba(0, 0, 0, 0.65);
+}
+
+/* Arco arriba, como el panel de "Locación" de la referencia. */
+.section--arch {
+  border-top-left-radius: 50% 22%;
+  border-top-right-radius: 50% 22%;
+  padding-top: clamp(3.4rem, 12vw, 4.8rem);
+}
+
+/* Todo el contenido va sobre el oso; el oso, sobre el fondo del panel. */
+.section--cream > *:not(.oso),
+.section--navy > *:not(.oso) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Un solo oso por sección: grande, bien compuesto, apoyado en una esquina
+   inferior y recortado por el borde de la tarjeta. Nunca tapa el texto (queda
+   detrás) ni empuja el layout. */
 .oso {
   position: absolute;
-  z-index: -1;
-
-  /* Van montados sobre el filete que separa las secciones: es la única banda
-     de ancho completo que está garantizadamente vacía. Centrarlos ahí (la
-     mitad en el padding de arriba, la mitad en el de abajo) es lo que evita
-     que se apoyen sobre un párrafo cuando el texto cambia de largo. */
-  top: 0;
-  translate: 0 -50%;
-
+  bottom: -0.4rem;
+  z-index: 0;
   width: auto;
-  height: clamp(4.75rem, 19vw, 6.5rem);
-  opacity: 0.8;
+  height: clamp(6.5rem, 22vw, 8rem);
+  opacity: 0.98;
   pointer-events: none;
   user-select: none;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.35));
 }
 
-/* Cortados por el borde: un motivo sangrado se lee como estampado de papelería;
-   uno entero y centrado se lee como sticker. */
-.oso-izq {
-  left: -1.5rem;
-  rotate: -4deg;
-}
-
-.oso-der {
-  right: -1.5rem;
-  rotate: 4deg;
-}
-
-.oso-grande {
-  height: clamp(6rem, 25vw, 8rem);
-}
-
-/* El hero no tiene filete arriba, así que este va en el hueco entre el contador
-   y el "Desliza", que es donde la pantalla queda vacía. */
-.oso-hero {
-  top: auto;
-  bottom: 14%;
-  right: -1.25rem;
-  translate: 0;
-  rotate: 4deg;
-  height: clamp(5.5rem, 22vw, 7.5rem);
-  opacity: 0.7;
-}
+.oso-left { left: -0.9rem; }
+.oso-right { right: -0.9rem; }
 
 @media (min-width: 40rem) {
-  .oso-hero { right: -4.5rem; }
+  .oso { height: clamp(7.5rem, 9vw, 9rem); }
 }
 
-@media (min-width: 40rem) {
-  .oso-izq { left: -4.5rem; }
-  .oso-der { right: -4.5rem; }
+/* El escudo es la portada: corona + oso + ADRIANO + BABY SHOWER en una sola
+   pieza. Reemplaza al nombre en script, que decía lo mismo dos veces. */
+.crest {
+  display: block;
+  width: min(86%, 20rem);
+  height: auto;
+  margin: 0 auto 0.4rem;
+  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.6));
 }
 
-/* Filete doble: una línea sola es una separación, dos son papelería. */
-.section + .section {
-  border-top: 1px solid var(--rule-faint);
-  box-shadow: inset 0 3px 0 -2px var(--rule-faint);
+/* El monograma con laurel es la marca del impresor: un sello chico repetido
+   arriba de cada sección que da unidad y llena la banda entre secciones. */
+.mono-sep {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 1.6rem;
+}
+
+.mono-sep img {
+  height: 3.2rem;
+  width: auto;
+  opacity: 0.9;
+}
+
+/* Chips de color del dress code: círculos con la paleta de la fiesta, como los
+   "dress code" de las invitaciones de referencia. */
+.swatches {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 1.6rem 0 0;
+}
+
+.swatch {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  border: 1px solid var(--rule-c);
+  box-shadow: inset 0 0 0 2px var(--cream);
+}
+
+.swatch-navy { background: #16293c; }
+.swatch-gold { background: #c3a878; }
+.swatch-green { background: #35583f; }
+.swatch-cream { background: #f3ede1; box-shadow: inset 0 0 0 1px var(--ink-rule); }
+
+/* La insignia circular cierra la invitación, como el sello de lacre de una
+   carta: lo último que se ve. */
+.insignia {
+  display: block;
+  width: auto;
+  height: 8.5rem;
+  margin: 3.5rem auto 0;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
 }
 
 .hero {
@@ -269,7 +374,7 @@ video::-webkit-media-controls-overlay-play-button {
   letter-spacing: 0.44em;
   text-indent: 0.44em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
   margin: 0 0 2.2rem;
 }
 
@@ -278,13 +383,13 @@ video::-webkit-media-controls-overlay-play-button {
   font-size: 1.28rem;
   font-weight: 300;
   line-height: 1.75;
-  color: var(--text);
+  color: var(--fg);
   margin: 0;
 }
 
 .lead.soft {
   font-size: 1.1rem;
-  color: var(--muted);
+  color: var(--fg-muted);
 }
 
 .feature-word {
@@ -292,19 +397,8 @@ video::-webkit-media-controls-overlay-play-button {
   font-weight: 400;
   font-size: clamp(2rem, 9vw, 2.8rem);
   letter-spacing: 0.02em;
-  color: var(--ivory);
+  color: var(--fg-strong);
   margin: 0 0 0.8rem;
-}
-
-.eyebrow {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 200;
-  font-size: 0.64rem;
-  letter-spacing: 0.5em;
-  text-indent: 0.5em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0;
 }
 
 .greeting {
@@ -316,43 +410,25 @@ video::-webkit-media-controls-overlay-play-button {
   margin: 0 0 1.6rem;
 }
 
-.name {
-  font-family: 'Pinyon Script', cursive;
-  font-weight: 400;
-  font-size: clamp(4.4rem, 25vw, 7.5rem);
-  color: var(--gold);
-  margin: 0.05em 0 0.15em;
-  line-height: 1;
-}
-
 .subtitle {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.15rem;
   font-weight: 300;
   font-style: italic;
   color: var(--muted);
-  margin: 0;
+  margin: 1.4rem 0 0;
 }
 
-.divider {
-  color: var(--gold);
-  font-size: 0.7rem;
-  margin: 2.2rem 0 0;
-  position: relative;
+/* Los papás cierran la portada: los nombres en serif, protagonistas. */
+.parents {
+  margin: 1.8rem 0 0;
+  line-height: 1.2;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.1rem, 8vw, 3rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ivory);
 }
-
-.divider::before,
-.divider::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 30%;
-  height: 3px;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-.divider::before { left: 6%; }
-.divider::after  { right: 6%; }
 
 /* ---------- Indicador de scroll ---------- */
 
@@ -395,15 +471,16 @@ video::-webkit-media-controls-overlay-play-button {
 
 /* ---------- Contador ---------- */
 
-.countdown { margin: 3rem 0 0.5rem; }
+.countdown { margin: 2.5rem 0 0.5rem; }
 
-/* Sin cajas: cuatro columnas separadas por filetes, como una tabla grabada. */
+/* Cuatro columnas separadas por filetes, como una tabla grabada. El marco lleva
+   un filete de oro arriba y verde inglés abajo: los dos acentos de la papelería. */
 .cd-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-top: 1px solid var(--rule-faint);
-  border-bottom: 1px solid var(--rule-faint);
-  padding: 1.4rem 0;
+  border-top: 1px solid var(--rule-c);
+  border-bottom: 1px solid var(--green-soft);
+  padding: 1.5rem 0;
 }
 
 .cd-cell {
@@ -412,7 +489,7 @@ video::-webkit-media-controls-overlay-play-button {
 }
 
 .cd-cell + .cd-cell {
-  border-left: 1px solid var(--rule-faint);
+  border-left: 1px solid var(--rule-faint-c);
 }
 
 .cd-cell span {
@@ -420,7 +497,7 @@ video::-webkit-media-controls-overlay-play-button {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
   font-size: clamp(1.7rem, 8vw, 2.3rem);
-  color: var(--ivory);
+  color: var(--fg-strong);
   font-variant-numeric: lining-nums tabular-nums;
   line-height: 1.1;
 }
@@ -433,7 +510,7 @@ video::-webkit-media-controls-overlay-play-button {
   letter-spacing: 0.26em;
   text-indent: 0.26em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--fg-muted);
 }
 
 .cd-message {
@@ -441,7 +518,7 @@ video::-webkit-media-controls-overlay-play-button {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.5rem;
   font-style: italic;
-  color: var(--gold);
+  color: var(--accent);
   margin: 1.5rem 0 0;
 }
 
@@ -450,7 +527,7 @@ video::-webkit-media-controls-overlay-play-button {
 /* Los datos van sobre el papel, no dentro de tarjetas: solo un filete arriba. */
 .detail {
   padding: 1.7rem 0;
-  border-top: 1px solid var(--rule-faint);
+  border-top: 1px solid var(--rule-faint-c);
 }
 
 .detail:first-of-type {
@@ -465,7 +542,7 @@ video::-webkit-media-controls-overlay-play-button {
   letter-spacing: 0.36em;
   text-indent: 0.36em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
   margin: 0 0 0.7rem;
 }
 
@@ -475,123 +552,14 @@ video::-webkit-media-controls-overlay-play-button {
   font-size: 1.4rem;
   font-weight: 300;
   line-height: 1.4;
-  color: var(--ivory);
+  color: var(--fg-strong);
 }
 
 .detail-sub {
   margin-top: 0.3rem !important;
   font-size: 1.05rem !important;
   font-style: italic;
-  color: var(--muted);
-}
-
-/* ---------- Tarjeta del programa ---------- */
-
-/* Una tarjeta de papel crema apoyada sobre el navy. Es el mismo recurso que usa
-   una invitación impresa cuando mete una tarjeta aparte con el orden del día:
-   cambia el material, no solo el tamaño de letra. */
-.tarjeta {
-  display: block;
-  max-width: 20rem;
-  margin: 0 auto;
-  padding: 2.6rem 1.6rem 2.9rem;
-  background:
-    repeating-linear-gradient(90deg,
-      rgba(160, 140, 105, 0.05) 0 1px,
-      transparent 1px 7px),
-    linear-gradient(175deg, #fdfbf5 0%, #f6f1e4 100%);
-  color: #2c3d4f;
-  border-radius: 2px;
-
-  /* La sombra la proyecta la tarjeta sobre el fondo, no un contenedor sobre la
-     tarjeta: por eso es larga y suave, como papel sobre una mesa. */
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.5) inset,
-    0 18px 40px -18px rgba(0, 0, 0, 0.55),
-    0 2px 6px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-/* Filete impreso por dentro del borde: el papel sigue hasta el corte, la línea
-   se detiene antes. Invertirlo es lo que delata una tarjeta hecha en pantalla. */
-.tarjeta::before {
-  content: '';
-  position: absolute;
-  inset: 0.55rem;
-  border: 1px solid rgba(122, 105, 77, 0.35);
-  border-radius: 1px;
-  pointer-events: none;
-}
-
-.tarjeta-sello {
-  display: block;
-  width: auto;
-  height: 3.4rem;
-  margin: 0 auto 1.4rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.28));
-}
-
-.tarjeta-titulo {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 300;
-  font-size: 0.6rem;
-  letter-spacing: 0.4em;
-  text-indent: 0.4em;
-  text-transform: uppercase;
-  color: #6b5b42;
-}
-
-/* Filete doble corto y centrado, la marca de agua de la papelería grabada. */
-.tarjeta-filete {
-  width: 3.5rem;
-  height: 3px;
-  margin: 1rem auto 1.8rem;
-  border-top: 1px solid rgba(122, 105, 77, 0.5);
-  border-bottom: 1px solid rgba(122, 105, 77, 0.28);
-}
-
-.programa-lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-
-.programa-lista li + li {
-  margin-top: 1.6rem;
-  padding-top: 1.6rem;
-  border-top: 1px solid rgba(122, 105, 77, 0.18);
-}
-
-.tl-hora {
-  display: block;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.56rem;
-  font-weight: 400;
-  letter-spacing: 0.26em;
-  text-indent: 0.26em;
-  text-transform: uppercase;
-  color: #8a7657;
-  margin-bottom: 0.5rem;
-}
-
-.tl-titulo {
-  display: block;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1.15;
-  color: #22334a;
-}
-
-.tl-detalle {
-  display: block;
-  margin-top: 0.25rem;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.05rem;
-  font-style: italic;
-  color: #6f7d8c;
+  color: var(--fg-muted);
 }
 
 /* ---------- Botones ---------- */
@@ -616,17 +584,16 @@ video::-webkit-media-controls-overlay-play-button {
   letter-spacing: 0.28em;
   text-indent: 0.28em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
   background: transparent;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--rule-c);
 }
 
 .btn-ghost:hover {
   background: rgba(195, 168, 120, 0.08);
 }
 
-/* Marfil sólido sobre navy. El degradado metálico anterior imitaba oro, y el
-   oro imitado es exactamente lo que no hace Ralph Lauren. */
+/* Relleno sólido que contrasta con el panel: marfil sobre navy, navy sobre crema. */
 .btn-gold {
   width: 100%;
   padding: 1.15rem 1.5rem;
@@ -636,14 +603,53 @@ video::-webkit-media-controls-overlay-play-button {
   letter-spacing: 0.3em;
   text-indent: 0.3em;
   text-transform: uppercase;
-  color: #16293c;
-  background: var(--ivory);
-  border: 1px solid var(--ivory);
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-bg);
 }
 
 .btn-gold:hover {
   background: transparent;
-  color: var(--ivory);
+  color: var(--btn-bg);
+}
+
+/* Deshabilitado hasta que escriban el nombre: se apaga y deja de invitar al toque. */
+.btn-gold:disabled {
+  opacity: 0.4;
+  cursor: default;
+  background: transparent;
+  color: var(--fg-muted);
+  border-color: var(--rule-faint-c);
+}
+
+/* Campo sin caja: un filete abajo, como una línea para firmar en papel. */
+.rsvp-input {
+  display: block;
+  width: 100%;
+  max-width: 20rem;
+  margin: 0 auto 1.6rem;
+  padding: 0.6rem 0.2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 300;
+  text-align: center;
+  color: var(--fg-strong);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule-c);
+  border-radius: 0;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.rsvp-input::placeholder {
+  color: var(--fg-muted);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.rsvp-input:focus {
+  border-bottom-color: var(--accent);
 }
 
 .rsvp-note {
@@ -653,28 +659,7 @@ video::-webkit-media-controls-overlay-play-button {
   font-size: 1.05rem;
   font-style: italic;
   line-height: 1.65;
-  color: var(--muted);
-}
-
-/* El sello de lacre cierra la invitación, que es literalmente su función en una
-   carta: lo último que se ve, no un adorno más. */
-.footer-sello {
-  display: block;
-  width: auto;
-  height: 4.2rem;
-  margin: 4rem auto 0;
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));
-}
-
-/* El sobre abierto: la pieza impresa que el invitado no va a recibir por correo.
-   Va suelto sobre el fondo, sin marco ni caja, para que se lea como una foto
-   del sobre y no como una imagen incrustada en una web. */
-.sobre {
-  display: block;
-  width: min(100%, 17rem);
-  height: auto;
-  margin: 0 auto 2.4rem;
-  filter: drop-shadow(0 20px 34px rgba(0, 0, 0, 0.5));
+  color: var(--fg-muted);
 }
 
 .replay {

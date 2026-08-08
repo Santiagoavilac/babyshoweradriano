@@ -13,3 +13,10 @@ output/
 .agents/
 .claude/
 skills-lock.json
+
+# Fuentes pesadas de imágenes: solo se versionan los .webp derivados
+public/osos nuevos/
+public/sellos/*.png
+
+# Repo de skills de GSAP clonado aparte, no es parte del proyecto
+gsap-skills/
